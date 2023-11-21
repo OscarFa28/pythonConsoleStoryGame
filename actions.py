@@ -9,6 +9,7 @@ import sys
 class Actions:
     def __init__(self, name):
         self.pl = Player(name)  
+        self.win_counter = 0
     
     def return_player_name(self):
         return self.pl.playerName
@@ -89,7 +90,7 @@ class Actions:
         print(f"Social: {self.pl.social}")
         print(f"Difficulty: {self.pl.difficultyType}")
 
-    def give_questions(self,age):
+    def give_questions(self,age,diff):
         child_questions = {
             1: [
                 [  # Questions -0
@@ -175,9 +176,9 @@ class Actions:
             
             3: [
                 [  # Questions -0
-                    "Like soccer?",
-                    "Like Futbol?",
-                    "Like box?"
+                    "Do you like soccer?",
+                    "Do you like Futbol?",
+                    "Do you like box?"
                 ],
                 [  # Option one -1
                     "Yes",
@@ -221,7 +222,7 @@ class Actions:
                 [  # Questions -0
                     "Make friends?",
                     "Talk to the kids?",
-                    "Lend my toys?"
+                    "Lend your toys?"
                 ],
                 [  # Option one -1
                     "Yes",
@@ -309,13 +310,170 @@ class Actions:
                 ],
         }
         
+        easy_questions = {
+            9: [
+                [  # Questions -0
+                    "Say to my parents?"
+                ],
+                [  # Option one -1
+                    "Yes",
+                    "say",
+                    "show",
+                    "sure"
+                ],
+                [  # Option two -2
+                    "No",
+                    "Dont want to",
+                    "quiet"
+                ],
+                [  # Option three -3
+                    "lie",
+                    "later",
+                    "Maybe"
+                ],
+                [  # Option one data -4
+                    10,  # difficulty
+                    -3,  # intelligence
+                    5,  # strong
+                    -2,  # health
+                    -3,   # social skills
+                ],
+                [  # Option two data -5
+                    5,  # difficulty
+                    5,  # intelligence
+                    2,  # strong
+                    0,  # health
+                    5,   # social skills
+                ],
+                [  # Option three data -6
+                    5,  # difficulty
+                    7,  # intelligence
+                    5  ,  # strong
+                    0,  # health
+                    7,   # social skills
+                ]
+                ],
+            
+            
+        }
+        
+        normal_questions = {
+            9: [
+                [  # Questions -0
+                    "Hit the kid from the school?"
+                ],
+                [  # Option one -1
+                    "Yes",
+                    "hit",
+                    "Use",
+                    "sure"
+                ],
+                [  # Option two -2
+                    "No",
+                    "Dont want to",
+                    "Any"
+                ],
+                [  # Option three -3
+                    "lightly",
+                    "later",
+                    "Maybe"
+                ],
+                [  # Option one data -4
+                    10,  # difficulty
+                    2,  # intelligence
+                    15,  # strong
+                    -2,  # health
+                    5,   # social skills
+                ],
+                [  # Option two data -5
+                    0,  # difficulty
+                    5,  # intelligence
+                    -1,  # strong
+                    0,  # health
+                    -1,   # social skills
+                ],
+                [  # Option three data -6
+                    5,  # difficulty
+                    2,  # intelligence
+                    7,  # strong
+                    -1,  # health
+                    2,   # social skills
+                ]
+                ],
+            
+            
+        }
+        
+        hard_questions = {
+            9: [
+                [  # Questions -0
+                    "Are you going to say it to te director?"
+                ],
+                [  # Option one -1
+                    "Yes",
+                    "of course",
+                    "say",
+                    "sure"
+                ],
+                [  # Option two -2
+                    "No",
+                    "quiet",
+                    "of course no"
+                ],
+                [  # Option three -3
+                    "get it back",
+                    "steal him",
+                    "stole back"
+                ],
+                [  # Option one data -4
+                    15,  # difficulty
+                    -5,  # intelligence
+                    0,  # strong
+                    -15,  # health
+                    -2,   # social skills
+                ],
+                [  # Option two data -5
+                    3,  # difficulty
+                    5,  # intelligence
+                    2,  # strong
+                    0,  # health
+                    -1,   # social skills
+                ],
+                [  # Option three data -6
+                    -8,  # difficulty
+                    10,  # intelligence
+                    10,  # strong
+                    5,  # health
+                    5,   # social skills
+                ]
+                ],
+            
+            
+        }
+        
         if age <= 5:
             return child_questions[age]
-        
+        elif diff == 1:
+            return easy_questions[age]
+        elif diff == 2:
+            return normal_questions[age]
+        else:
+            return hard_questions[age]
         
     def ask_question(self, age):
-        if age <= 5:
-            data = self.give_questions(age)
+            if age <= 5:
+                data = self.give_questions(age,0)
+            else:
+                if self.pl.difficulty < 33:
+                    difficulty_count = 1
+
+                elif self.pl.difficulty >= 33 and self.pl.difficulty < 66:
+                    difficulty_count = 2
+
+                else:
+                    difficulty_count = 3
+                    
+                data = self.give_questions(age, difficulty_count)    
             question = random.choice(data[0])
             options_one = data[1]
             options_two = data[2]
@@ -342,13 +500,30 @@ class Actions:
                     break
                 
                 time.sleep(2)
-                print("**Narrator: Sorry? repeat your decision")
+                if select == "stop game":
+                    print("Getting you out of this filth")
+                    sys.exit()
+                    
+                if self.win_counter == 3:
+                    print("You discovered the easter egg")
+                    print("Congratulations you won, you're going to heaven")
+                    sys.exit()
+            
+                if select == "show status":
+                    self.show_status()    
+                    print("**Narrator: Now your decision...")
+                    
+                if select == "worldylife":
+                    self.win_counter += 1   
+                    print(self.win_counter)
+                    print("**Narrator:Got it, Now your decision...")
+                    
+                else:    
+                    print("**Narrator: Sorry? repeat your decision")
                 
             self.make_adjustments(results, age)
             
     def make_adjustments(self, results, age):
-        print(results)
-        
         
         self.pl.difficulty = min(max(self.pl.difficulty + results[0], 0), 100)
         self.pl.intelligence = min(max(self.pl.intelligence + results[1], 0), 100)
@@ -358,7 +533,7 @@ class Actions:
 
         if self.pl.health == 0:
             print("__YOU DIE__")
-            time.sleep(4)
+            time.sleep(2)
             print("**God: Hey you!")
             time.sleep(2)
             print("**God: It's not a pleasure to see you again.")
@@ -366,6 +541,7 @@ class Actions:
             print("**God: I suppose that your bad decisions led to an early demise.")
             time.sleep(2)
             print("**God: We need to decide if you go to heaven or to the inferno.")
+            time.sleep(3)
             
             average = (self.pl.intelligence + self.pl.strong + self.pl.social) / 3
             
@@ -377,6 +553,6 @@ class Actions:
                 print("**God: Huh, tough luck! Seems like it's a downward spiral to the fiery depths. Try to bring marshmallows.")
 
             
-            self.show_status
+            self.show_status()
             sys.exit()
 

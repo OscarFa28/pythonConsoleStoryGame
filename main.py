@@ -37,10 +37,10 @@ time.sleep(2)
 
 type = act.return_difficulty_type()
 if type == "Easy":
-    print("**God: You caught me at a good time, so I'm going to help you. Your country is: ")
+    print("**God: You caught me at a good time, so I'm going to help you. Your country is going to be good, trust me")
     time.sleep(2)
 elif type == "Impossible":
-    print("**God: I've been annoyed with you since we met, so your country is going to be: ")
+    print("**God: I've been annoyed with you since we met, so your country is going to be awful, sorry")
     time.sleep(2)
     
 
@@ -49,7 +49,11 @@ time.sleep(2)
 print("--Borned in "+(act.return_country())+"--")
 time.sleep(2)
 act.show_status()
-
+time.sleep(1)
+print("If you ever want to see your actual status again just type 'show status' in any input")
+time.sleep(2)
+print("If you ever want to get ot of the game just type 'stop game' in any input")
+time.sleep(2)
 
 print("**Narrator: You have just been born into a beautiful family.")
 age = 0
@@ -136,4 +140,29 @@ time.sleep(2)
 act.ask_question(age)
 
 time.sleep(4)
-act.show_status()
+
+#End Child stage
+
+age = 9
+print("**Narrator: Your life as a child had been like any other kid's in your country.")
+time.sleep(2)
+print("**Narrator: Some days were for play, some for joy, and some for tears.")
+time.sleep(2)
+print("**Narrator: But at 9, something different happened. Let's see.")
+time.sleep(2)
+
+if act.return_difficulty() < 33:  # EASY
+    print("**Narrator: You got a bad grade at school. Are you going to...")
+    time.sleep(2)
+    act.ask_question(age)
+
+elif act.return_difficulty() >= 33 and act.return_difficulty() < 66:  # NORMAL
+    print("**Narrator: A kid is laughing about your past car accident. Do you want to...")
+    time.sleep(2)
+    act.ask_question(age)
+
+else:  # HARD
+    print("**Narrator: An adolescent stole some things from your backpack.")
+    time.sleep(2)
+    act.ask_question(age)
+
